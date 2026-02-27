@@ -2,27 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// --- RUTA PARA DISPARAR LA NOTIFICACIÓN ---
+// ==========================================================
+//  RUTAS DE VALIDACIÓN (Para cuando el vecino haga clic)
+// ==========================================================
+
+// Esta ruta se activa cuando el vecino pulsa el botón del mail
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill(); // Marca al usuario como "Verificado" en la DB
+
+    // Redirigimos a React con un mensaje de éxito
+    return redirect('http://localhost:5173/login?verificado=1');
+})->middleware(['signed'])->name('verification.verify');
+
+
+// ==========================================================
+//  EVENTOS DE NOTIFICACIÓN
+// ==========================================================
 Route::get('/crear-asamblea', function (Request $request) {
-
-    // 1. Recibimos el texto que viene desde React (via URL)
-    // Si no escribiste nada, usa el texto por defecto.
     $texto = $request->query('mensaje', '¡Aviso General del Condominio!');
-
-    // 2. Disparamos el evento con ESE texto y la hora actual
     event(new \App\Events\NuevaAsamblea($texto, now()->toTimeString()));
-
-    // 3. Respuesta para saber que todo salió bien
     return "✅ Evento disparado con el mensaje: " . $texto;
 });
