@@ -24,12 +24,16 @@ Route::post('/vecinos/finalizar-registro', [AuthController::class, 'finalizarReg
 // ==========================================
 // 2. RUTAS PROTEGIDAS (Middleware Sanctum)
 // ==========================================
-// Todo lo que esté aquí adentro requiere el encabezado: Authorization: Bearer {token}
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // --- RUTA PARA QUE EL ADMIN REGISTRE VECINOS ---
-  
+
+    // Cambiado a /registrar-vecino para que coincida con AuthController
     Route::post('/registrar-vecino', [AuthController::class, 'registrarVecino']);
+
+    // --- ruta para el cambio DE CONTRASEÑA ---
+    Route::post('/actualizar-password', [AuthController::class, 'actualizarPassword']);
 
     // --- RUTAS DE NOTIFICACIONES ---
     Route::get('/notificaciones', function () {
