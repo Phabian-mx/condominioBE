@@ -8,6 +8,7 @@ use App\Models\Encuesta;
 use App\Models\HistorialVoto;
 use App\Http\Controllers\AuthController;
 
+
 // IMPORTANTE: Asegúrate de importar los eventos para que funcionen
 use App\Events\NuevaNotificacion;
 use App\Events\VotoActualizado;
@@ -21,6 +22,10 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Registro opcional
 Route::post('/registro', [AuthController::class, 'registro']);
+
+// Rutas de Recuperación de Contraseña
+Route::post('/password/enviar-codigo', [AuthController::class, 'enviarCodigo']);
+Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 // Finalizar registro de vecinos invitados
 Route::post('/vecinos/finalizar-registro', [AuthController::class, 'finalizarRegistro']);
